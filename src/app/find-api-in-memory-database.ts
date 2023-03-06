@@ -8,44 +8,44 @@ import { InMemoryDbService } from "angular-in-memory-web-api";
 })
 export class FindApiInMemoryDatabase implements InMemoryDbService {
     createDb() {
-        const apiElements = [
-            { 
-                name: "Address Api" ,
+        const servers = [
+            {
+                name: "Address Api",
                 server: 1,
                 url: "test test",
                 availability: 1
             },
-            { 
-                name: "Address Api" ,
+            {
+                name: "Address Api",
                 server: 0,
                 url: "test 123",
                 availability: 1
             },
-            { 
-                name: "EContact Api" ,
+            {
+                name: "EContact Api",
                 server: 1,
                 url: "mails",
                 availability: 1
             },
-            { 
-                name: "EContact Api" ,
+            {
+                name: "EContact Api",
                 server: 0,
                 url: "e contact",
                 availability: 0
             },
-            { 
-                name: "Phones Api" ,
+            {
+                name: "Phones Api",
                 server: 1,
                 url: "haloooo",
                 availability: 1
             },
-            { 
-                name: "Phones Api" ,
+            {
+                name: "Phones Api",
                 server: 0,
                 url: "dryn dryn",
                 availability: 0
             }
         ]
-        return apiElements;
+        return { servers };
     }
 }

@@ -1,70 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { FindApiService } from '../service/find-api.service';
 import { ServerModel } from '../state/ServerModel';
 
 @Component({
   selector: 'app-find-api-list',
   templateUrl: './find-api-list.component.html',
-  styleUrls: ['./find-api-list.component.css']
+  styleUrls: ['./find-api-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FindApiListComponent implements OnInit {
+export class FindApiListComponent implements OnInit, OnDestroy {
 
-  servers = [
-    {
-      name: "Address Api",
-      server: 1,
-      url: "test test",
-      availability: 1,
-    },
-    {
-      name: "Address Api",
-      server: 0,
-      url: "test 123",
-      availability: 1
-    },
-    {
-      name: "EContact Api",
-      server: 1,
-      url: "mails",
-      availability: 1
-    },
-    {
-      name: "EContact Api",
-      server: 0,
-      url: "e contact",
-      availability: 0
-    },
-    {
-      name: "Phones Api",
-      server: 1,
-      url: "haloooo",
-      availability: 1
-    },
-    {
-      name: "Phones Api",
-      server: 0,
-      url: "dryn dryn",
-      availability: 0
-    }
-  ];
+  private serversSubscribe$!: Subscription;
 
-  actualServer = this.servers;
+  private initialServers!: ServerModel[];
+
+  actualServers!: ServerModel[];
 
   findByName: string = '';
 
   constructor(private findApiService: FindApiService) { }
-  
+
   ngOnInit(): void {
-    this.findApiService.getServers().subscribe(x => console.log(x));
+    this.serversSubscribe$ = this.findApiService.servers$.subscribe(x => {
+      this.initialServers = x;
+      this.actualServers = x;
+    });
   }
 
-  filter() : void {
-    if(this.findByName === '')
-    {
-      this.actualServer = this.servers;
+  ngOnDestroy(): void {
+    this.serversSubscribe$.unsubscribe();
+  }
+
+  filter(): void {
+    if (this.findByName === '') {
+      this.actualServers = this.initialServers
     }
     else {
-      this.actualServer = this.actualServer.filter(x => x.name === this.findByName);
+      this.actualServers = this.actualServers.filter(x => x.name.toLowerCase().includes(this.findByName));
       this.findByName = '';
     }
   }

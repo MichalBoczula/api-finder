@@ -1,29 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, tap, throwError } from 'rxjs';
-import { ServerModel } from '../state/ServerModel';
-import { ProductCategory } from '../state/ProductCategory';
+import { catchError, shareReplay, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FindApiService {
 
-  private url = "http://localhost:4201/api/servers";
-  suppliersUrl = 'http://localhost:4201/api/productCategories';
+  private url = "api/servers";
 
-  constructor( private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  getServers(): Observable<ServerModel[]> {
-    return this.httpClient.get<any>(this.url)
+  servers$ = this.httpClient.get<any>(this.url)
     .pipe(
-      tap(x => console.log(x)),
-      catchError(x => throwError(x))
+      tap(x => console.log(JSON.stringify(x))),
+      catchError(x => throwError(x)),
+      shareReplay(1)
     )
-  }
-
-  suppliers$ = this.httpClient.get<ProductCategory[]>(this.suppliersUrl)
-  .pipe(
-    tap(data => console.log('suppliers', JSON.stringify(data))),
-  );
 }

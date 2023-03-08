@@ -1,29 +1,26 @@
-<diV class="container">
-  <div class="row">
+<div class="input-group my-3">
+  <span class="input-group-text" id="inputGroup-sizing-default">Find API bro!!!</span>
+  <input type="text" class="form-control" [(ngModel)]="findByName" name="name">
+  <button type="submit" class="btn btn-dark" (click)="filter()">Submit</button>
+</div>
 
-    <div class="input-group my-3">
-      <span class="input-group-text" id="inputGroup-sizing-default">Find API bro!!!</span>
-      <input type="text" class="form-control" [(ngModel)]="findByName" name="name">
-      <button type="submit" class="btn btn-dark" (click)="filter()">Submit</button>
-    </div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Server</th>
+      <th scope="col">URL</th>
+      <th scope="col">Availability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let server of actualServers$ | async">
+      <td>{{server.name}}</td>
+      <td>{{server.server}}</td>
+      <td>{{server.url}}</td>
+      <td>{{server.availability}}</td>
+    </tr>
+  </tbody>
+</table>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Server</th>
-          <th scope="col">URL</th>
-          <th scope="col">Availability</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let server of actualServers">
-          <td>{{server.name}}</td>
-          <td>{{server.server}}</td>
-          <td>{{server.url}}</td>
-          <td>{{server.availability}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</diV>
+<a class="btn btn-primary" [routerLink]="['/domains']">Back to domains</a>

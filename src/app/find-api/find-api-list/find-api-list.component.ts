@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, of, Subject, Subscription, takeUntil } from 'rxjs';
 import { FindApiService } from '../service/find-api.service';
 import { ServerModel } from '../state/ServerModel';
 
@@ -9,35 +9,28 @@ import { ServerModel } from '../state/ServerModel';
   styleUrls: ['./find-api-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FindApiListComponent implements OnInit, OnDestroy {
+export class FindApiListComponent implements OnInit {
 
-  private serversSubscribe$!: Subscription;
-
-  private initialServers!: ServerModel[];
-
-  actualServers!: ServerModel[];
+  private initialServers!: Observable<ServerModel[]>;
 
   findByName: string = '';
+
+  actualServers$ = this.findApiService.servers$
 
   constructor(private findApiService: FindApiService) { }
 
   ngOnInit(): void {
-    this.serversSubscribe$ = this.findApiService.servers$.subscribe(x => {
-      this.initialServers = x;
-      this.actualServers = x;
-    });
+    this.initialServers = this.actualServers$;
   }
-
-  ngOnDestroy(): void {
-    this.serversSubscribe$.unsubscribe();
-  }
-
+  
   filter(): void {
     if (this.findByName === '') {
-      this.actualServers = this.initialServers
+      this.actualServers$ = this.initialServers
     }
     else {
-      this.actualServers = this.actualServers.filter(x => x.name.toLowerCase().includes(this.findByName));
+      let localServers: ServerModel[] = []
+      this.actualServers$.subscribe(x => localServers = x);
+      this.actualServers$ = of(localServers.filter(x => x.name.toLocaleLowerCase().includes(this.findByName)));
       this.findByName = '';
     }
   }

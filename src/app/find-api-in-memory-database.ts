@@ -46,6 +46,25 @@ export class FindApiInMemoryDatabase implements InMemoryDbService {
                 availability: 0
             }
         ]
-        return { servers };
+
+        const domains = [
+            {
+                name: "DTM",
+                apis: ['Address', 'EContact', 'Deceased']
+            },
+            {
+                name: "DEX",
+                apis: ['DataExchange', 'Ceidg']
+            },
+            {
+                name: "Finance",
+                apis: ['DirectDebit', 'Payments']
+            },
+            {
+                name: "EKruk",
+                apis: ['Ekruk', 'abc']
+            }
+        ]
+        return { servers, domains };
     }
 }
